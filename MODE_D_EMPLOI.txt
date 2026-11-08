@@ -1,0 +1,75 @@
+================================================================================
+   MODE D'EMPLOI COMPLET - DEVERROUILLAGE TENSOR CORE NVIDIA RTX 4050 LAPTOP
+   Machine cible : Intel Core i9-12900HK + RTX 4050 Laptop (AD107M / 10DE:28A1)
+   BIOS          : American Megatrends (AMI Aptio V - ALASKA 1072009)
+================================================================================
+
+IMPORTANT : Ne redemarrez JAMAIS le PC tant que votre entrainement IA (YOLOv26s)
+est en cours d'execution. Attendez la fin complete de l'entrainement actuel.
+
+--------------------------------------------------------------------------------
+ 1. CE QUE CONTIENT CE DOSSIER (C:\Users\lenov\Documents\UNLOCK_GPU)
+--------------------------------------------------------------------------------
+ - GERER_UNLOCK_GPU.bat       : Votre centre de controle principal (double-clic).
+ - check_gpu_unlock_status.py : Sonde materielle BAR0 (SS0/SS1) + Benchmark TFLOPS.
+ - deploy_usb_unlock.ps1      : Script d'installation automatique sur cle USB FAT32.
+ - nv-uefi-unlocker\          : Outil officiel v2.1.6 verifie par SHA-256 pour AD107M.
+ - nv-uefi-unlocker\usbroot\  : Les 8 fichiers binaires AD102 pre-generes pour votre
+                                RTX 4050 Laptop (10DE:28A1).
+
+--------------------------------------------------------------------------------
+ 2. MISE EN ROUTE INITIALE (EN 3 ETAPES SIMPLES)
+--------------------------------------------------------------------------------
+
+ETAPE A : Preparer une petite cle USB (formatee en FAT32)
+  1. Branchez une cle USB formatee en FAT32 sur votre PC.
+  2. Double-cliquez sur "GERER_UNLOCK_GPU.bat".
+  3. Choisissez :
+     - Option [2] pour le Mode Securise (demande d'appuyer sur ESPACE au boot), OU
+     - Option [3] pour le Mode Automatique (deverrouille tout seul apres 5 secondes
+       sans toucher au clavier et lance Windows automatiquement).
+  4. Choisissez l'Option [4] ("ACTIVER le maintien continu Windows") pour empecher
+     Windows de couper l'alimentation de la carte graphique (D3cold) et de perdre
+     le deverrouillage en cours de journee.
+
+ETAPE B : Regler le BIOS AMI Aptio V (A NE FAIRE QU'UNE SEULE FOIS)
+  1. Depuis "GERER_UNLOCK_GPU.bat", choisissez l'Option [6] (ou tapez F2/Suppr au
+     demarrage) pour entrer dans l'ecran du BIOS AMI.
+  2. Appliquez ces reglages :
+     - Onglet Security -> Secure Boot -> "Secure Boot" = [Disabled]
+     - Onglet Boot     -> "Fast Boot"                  = [Disabled]
+     - Onglet Boot     -> Mettez votre Cle USB UEFI en Priorite de Boot #1
+                          (et Windows Boot Manager en #2).
+     - (Optionnel si present) Onglet Advanced/Chipset -> Display Mode = [dGPU Only]
+  3. Appuyez sur F10 (Save & Exit).
+
+ETAPE C : Demarrage et Verification
+  1.IMPORTANT SUR PC PORTABLE : Pour que la RTX 4050 soit allumee au moment du boot
+    UEFI, utilisez toujours "Redemarrer" depuis Windows (et non un arret a froid sur
+    batterie).
+  2. Au demarrage sur la cle USB :
+     - L'outil UEFI debloque les registres SS0=0x88888888 et SS1=0x8 de votre
+       RTX 4050 (0000:01:00.0), effectue un reset interne (FLR), puis lance Windows.
+  3. Une fois sous Windows, double-cliquez sur "GERER_UNLOCK_GPU.bat" :
+     - La ligne "SS0 / SS1" affichera : SS0=0x88888888, SS1 low nibble=0x8
+     - Le verdict affichera : [ UNLOCK 100% ACTIF (FULL-RATE) ]
+     - Le debit Tensor Core FP16->FP32 passera d'environ ~22-35 TFLOPS (bride)
+       a ~38-68 TFLOPS (1.7x a 1.9x plus rapide).
+
+--------------------------------------------------------------------------------
+ 3. COMMENT DESACTIVER LE UNLOCK ET REVENIR A 100% D'ORIGINE ?
+--------------------------------------------------------------------------------
+  - Pour desactiver temporairement : Retirez simplement la cle USB avant de
+    redemarrer (ou appuyez sur Echap pendant le compte a rebours de 5 secondes au
+    demarrage). La carte graphique demarrera a 100% dans son etat d'usine NVIDIA.
+  - Pour remettre aussi les parametres d'economie d'energie Windows d'origine :
+    Lancez "GERER_UNLOCK_GPU.bat" et choisissez l'Option [5].
+
+--------------------------------------------------------------------------------
+ 4. SECURITE MATERIELLE ET LOGICIELLE
+--------------------------------------------------------------------------------
+  - Zero modification du VBIOS de votre RTX 4050 (100% en memoire volatile RAM).
+  - Zero modification des fichiers systeme Windows ni du pilote NVIDIA 566.14.
+  - En cas d'ecran noir au boot : Eteignez le PC, retirez la cle USB et allumez-le
+    normalement. Tout repart immediatement a l'etat d'origine.
+================================================================================

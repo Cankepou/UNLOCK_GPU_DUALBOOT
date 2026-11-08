@@ -1,0 +1,12 @@
+# Sauvegardes et caches locaux
+_BACKUP_STABLE/
+__pycache__/
+*.pyc
+*.bak
+*.reg
+embedded_payload.gz
+
+# Éviter la duplication des binaires bruts non compressés de 85 Mo dans l'arbre Git
+CLE_USB_PRETE_A_COPIER/
+nv-uefi-unlocker/usbroot/
+nv-uefi-unlocker/inputs/
